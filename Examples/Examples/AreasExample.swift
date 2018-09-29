@@ -43,16 +43,15 @@ class AreasExample: UIViewController, ChartDelegate {
         let c2 = UIColor(red: 0.9, green: 0.1, blue: 0.1, alpha: 0.4)
         let c3 = UIColor(red: 0.1, green: 0.9, blue: 0.1, alpha: 0.4)
         
-        
-        let chartPointsLayer1 = ChartPointsAreaLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints1, areaColors: [c1], animDuration: 3, animDelay: 0, addContainerPoints: true)
-        let chartPointsLayer2 = ChartPointsAreaLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints2, areaColors: [c2], animDuration: 3, animDelay: 0, addContainerPoints: true)
-        let chartPointsLayer3 = ChartPointsAreaLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints3, areaColors: [c3], animDuration: 3, animDelay: 0, addContainerPoints: true)
-        
         let lineModel1 = ChartLineModel(chartPoints: chartPoints1, lineColor: UIColor.black, animDuration: 1, animDelay: 0)
         let lineModel2 = ChartLineModel(chartPoints: chartPoints2, lineColor: UIColor.black, animDuration: 1, animDelay: 0)
         let lineModel3 = ChartLineModel(chartPoints: chartPoints3, lineColor: UIColor.black, animDuration: 1, animDelay: 0)
         
-        let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, lineModels: [lineModel1, lineModel2, lineModel3])
+        let chartPointsLineLayer = ChartPointsLineLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, lineModels: [lineModel1, lineModel2, lineModel3], pathGenerator: CatmullPathGenerator())
+        
+        let chartPointsLayer1 = ChartPointsAreaLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints1, areaColors: [c1], animDuration: 3, animDelay: 0, addContainerPoints: true, pathGenerator: chartPointsLineLayer.pathGenerator)
+        let chartPointsLayer2 = ChartPointsAreaLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints2, areaColors: [c2], animDuration: 3, animDelay: 0, addContainerPoints: true, pathGenerator: chartPointsLineLayer.pathGenerator)
+        let chartPointsLayer3 = ChartPointsAreaLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints3, areaColors: [c3], animDuration: 3, animDelay: 0, addContainerPoints: true, pathGenerator: chartPointsLineLayer.pathGenerator)
         
         var selectedView: ChartPointTextCircleView?
         
@@ -97,7 +96,7 @@ class AreasExample: UIViewController, ChartDelegate {
                     bubbleView.addSubview(infoView)
                     weakSelf.popups.append(bubbleView)
                     
-                    UIView.animate(withDuration: 0.2, delay: 0, options: UIViewAnimationOptions(), animations: {
+                    UIView.animate(withDuration: 0.2, delay: 0, options: UIView.AnimationOptions(), animations: {
                         view.selected = true
                         selectedView = view
                         
@@ -106,7 +105,7 @@ class AreasExample: UIViewController, ChartDelegate {
                 }
             }
             
-            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: UIViewAnimationOptions(), animations: {
+            UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: UIView.AnimationOptions(), animations: {
                 let w: CGFloat = v.frame.size.width
                 let h: CGFloat = v.frame.size.height
                 let frame = CGRect(x: screenLoc.x - (w/2), y: screenLoc.y - (h/2), width: w, height: h)
@@ -117,6 +116,8 @@ class AreasExample: UIViewController, ChartDelegate {
         }
         
         let itemsDelay: Float = 0.08
+
+        // To not have circles clipped by the chart bounds, pass clipViews: false (and ChartSettings.customClipRect in case you want to clip them by other bounds)
         let chartPointsCircleLayer1 = ChartPointsViewsLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints1, viewGenerator: circleViewGenerator, displayDelay: 0.9, delayBetweenItems: itemsDelay, mode: .translate)
         
         let chartPointsCircleLayer2 = ChartPointsViewsLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: chartPoints2, viewGenerator: circleViewGenerator, displayDelay: 1.8, delayBetweenItems: itemsDelay, mode: .translate)

@@ -26,7 +26,7 @@ Easy to use and highly customizable charts library for iOS
 
 <sub>*These are separate repos for better focus and reusability.</sub>
 
-Swift 4 - 1.2, iOS 11 - 7
+iOS 7+
 
 [Video](https://www.youtube.com/watch?v=bD6uDF-KckM)
 
@@ -40,7 +40,6 @@ Swift 4 - 1.2, iOS 11 - 7
 
 ![ScreenShot](Screenshots/IMG_1328.PNG)
 
-![ScreenShot](Screenshots/IMG_0025.jpeg)
 ![ScreenShot](Screenshots/IMG_0026.jpeg)
 ![ScreenShot](Screenshots/IMG_0101.jpeg)
 ![ScreenShot](Screenshots/IMG_0027.jpeg)
@@ -56,34 +55,27 @@ Swift 4 - 1.2, iOS 11 - 7
 ![ScreenShot](Screenshots/IMG_0041.jpeg)
 
 
-## Installation
+## 🛠 Installation
 
 ### CocoaPods
 
 Add to your Podfile:
 
-Swift 4.x (master):
+Swift 4.x:
 ```ruby
 use_frameworks!
-pod 'SwiftCharts', :git => 'https://github.com/i-schuetz/SwiftCharts.git'
+pod 'SwiftCharts', '~> 0.6.2'
 ```
 
 Swift 3.x:
 ```ruby
 use_frameworks!
-pod 'SwiftCharts', '~> 0.6'
+pod 'SwiftCharts', '0.6'
 ```
-Note: To use Swift 3.x, you need Xcode 8+
 
 To use master directly:
 ```ruby
 pod 'SwiftCharts', :git => 'https://github.com/i-schuetz/SwiftCharts.git'
-```
-
-Swift 2.3 (not actively maintained):
-```ruby
-use_frameworks!
-pod 'SwiftCharts', '~> 0.4'
 ```
 
 And then:
@@ -100,9 +92,14 @@ import SwiftCharts
 
 Add to your Cartfile:
 
+Swift 4.x:
+```
+github "i-schuetz/SwiftCharts" ~> 0.6.2
+```
+
 Swift 3.x:
 ```
-github "i-schuetz/SwiftCharts" ~> 0.6
+github "i-schuetz/SwiftCharts" == 0.6
 ```
 
 Swift 2.3 (not actively maintained):
@@ -110,7 +107,7 @@ Swift 2.3 (not actively maintained):
 github "i-schuetz/SwiftCharts" ~> 0.4
 ```
 
-## Contribute
+## 🤝 Contribute
 
 Contributions are highly appreciated! To submit one:
 
@@ -118,30 +115,7 @@ Contributions are highly appreciated! To submit one:
 2. Commit changes to a branch in your fork
 3. Push your code and make a pull request
 
-## Donate
-
-* **[$5](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4QMZ5S7LRL98G)**: Thank's for creating this project, here's a coffee (or some beer) for you!
-* **[$10](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=C2K5VNNCKHLMQ)**: Wow, I am stunned. Let me take you to the movies!
-* **[$15](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UWBBTFM4MLVF2)**: I really appreciate your work, let's grab some lunch!
-* **[$25](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TRVKQG2LBGZZA)**: That's some awesome stuff you did right there, dinner is on me!
-* **[$50](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G2KZ6LZQUKD9Q)**: I really really want to support this project, great job!
-* **[$100](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B8KAP474QG97U)**: This project saved me hours (if not days) of struggle and hard work, simply awesome!
-
-Of course, you can also [choose what you want to donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q3MPVLNZW896U), all donations are awesome!
-
-## Migration guide 0.5.x - 0.6
-
-- Inner frame is now passed only to `Chart` instead of to the layers.
-- `ChartSettings` now have to be passed to `Chart`.
-- `ChartAxisLayer` now doesn't directly manage the logic to map between screen and domain coordinates, but delegates this to a new `ChartAxis` class. `ChartAxis` is what has to be passed now to the chart layers. Shortly, pass to the layers `axisLayer.axis` instead of `axisLayer`.
-
-If I'm forgetting something, please add it or open an issue!
-
-The best way to migrate is probably to compare an example from 0.5.1 and 0.6. For the newly added zooming and panning you may need some work to get everything working correctly, depending on the kind of functionality you use. Here also please look at the examples.
-
-Please also take a look at the [changelog](https://github.com/i-schuetz/SwiftCharts/blob/master/CHANGELOG.md) for newly added functionality and features.
-
-## Quick start 
+## 🏎️ Quick start 
 
 Multiline chart:
 
@@ -197,7 +171,7 @@ self.view.addSubview(chart.view)
 self.chart = chart
 ```
 
-## Concept:
+## 👩‍🏫 Concept:
 
 - Layer architecture, which makes it extremely easy to customize charts, create new types, combine existing ones and add interactive elements.
 
@@ -280,25 +254,19 @@ Layers decide how to present their data - this can be done adding subviews, (CA)
 
 View based layers will use a generator function to generate chart point views. This function receives the complete state of each chartpoint (model data, screen location) and produces an UIView, allowing any type of customization.
 
-### Hello world:
+### 🐤 Hello world:
 
 There's a [hello world](Examples/Examples/HelloWorld.swift) included in the examples, similar to the above code, with a bit more explanations. Change some properties of the generated views, copy paste the chartPointsLineLayer used in the snippet above, and pass it to the chart's layers, to display a line behind the views, and you have already mastered the main concepts!
 
-#### Important!
+#### ⚠️ Important!
 
 * Don't forget to always keep a strong reference to the chart instance or it will be released, which leads to axis & labels not showing.
 
 * If you have a lot of axis labels in your chart it may be necessary to do the calculation of the coordinate space in the background, to avoid possible delays which are noticeable during transitions or scrolling. See ScrollExample or MultipleAxesExample example for this.
 
-## Tasks
+## ✅ Tasks
 
 SwiftCharts has got now some [projects](https://github.com/i-schuetz/SwiftCharts/projects) to plan features and improvements. Feel free to grab any of these topics even if it's just to add feedback. You can open an issue for this. Other options like opening a Slack channel are possible.
-
-## "Used by" 
-
-Someone gave me recently the idea to add a "this library is used by" section to SwiftCharts - if you want to be shown, please send me a [message!](http://www.ivanschuetz.com/contact-impressum.php)!
-
-(It may take a while until this is shown, as I want to collect a few first)
 
 ## Created By:
 

@@ -205,7 +205,7 @@ class MultiTrackerExample: UIViewController, UIGestureRecognizerDelegate {
             circles
         ]
         
-        return Chart(frame: frame, innerFrame: coordsSpace.chartInnerFrame, settings: chartSettings, layers: layers.flatMap { $0 })
+        return Chart(frame: frame, innerFrame: coordsSpace.chartInnerFrame, settings: chartSettings, layers: layers.compactMap { $0 })
     }
 
     private func generateIOBChartWithFrame(frame: CGRect) -> Chart? {
@@ -235,10 +235,10 @@ class MultiTrackerExample: UIViewController, UIGestureRecognizerDelegate {
 
         // The IOB area
         let lineModel = ChartLineModel(chartPoints: IOBPoints, lineColor: UIColor.IOBTintColor, lineWidth: 2, animDuration: 0, animDelay: 0)
-        let IOBLine = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, lineModels: [lineModel])
-
-        let IOBArea = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, chartPoints: containerPoints, areaColors: [UIColor.IOBTintColor.withAlphaComponent(0.75), UIColor.clear], animDuration: 0, animDelay: 0, addContainerPoints: false)
-
+        let IOBLine = ChartPointsLineLayer(xAxis: xAxis, yAxis: yAxis, lineModels: [lineModel], pathGenerator: StraightLinePathGenerator())
+        
+        let IOBArea = ChartPointsAreaLayer(xAxis: xAxis, yAxis: yAxis, chartPoints: containerPoints, areaColors: [UIColor.IOBTintColor.withAlphaComponent(0.75), UIColor.clear], animDuration: 0, animDelay: 0, addContainerPoints: false, pathGenerator: IOBLine.pathGenerator)
+        
         // Grid lines
         let gridLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: guideLinesLayerSettings, axisValuesX: Array(xAxisValues.dropLast(1)), axisValuesY: yAxisValues)
 
@@ -273,7 +273,7 @@ class MultiTrackerExample: UIViewController, UIGestureRecognizerDelegate {
             IOBLine,
         ]
 
-        return Chart(frame: frame, innerFrame: coordsSpace.chartInnerFrame, settings: chartSettings, layers: layers.flatMap { $0 })
+        return Chart(frame: frame, innerFrame: coordsSpace.chartInnerFrame, settings: chartSettings, layers: layers.compactMap { $0 })
     }
 }
 
@@ -315,7 +315,7 @@ private extension ChartPointsTouchHighlightLayer {
                     if let text = chartPointModel.chartPoint.y.labels.first?.text {
                         let label = UILabel()
                         if #available(iOS 9.0, *) {
-                            label.font = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFontWeightBold)
+                            label.font = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .bold)
                         } else {
                             label.font = UIFont.systemFont(ofSize: 15)
                         }

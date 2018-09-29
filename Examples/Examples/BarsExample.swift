@@ -111,9 +111,9 @@ class BarsExample: UIViewController {
             self.controller = controller
             
             horizontal = UIButton()
-            horizontal.setTitle("Horizontal", for: UIControlState())
+            horizontal.setTitle("Horizontal", for: UIControl.State())
             vertical = UIButton()
-            vertical.setTitle("Vertical", for: UIControlState())
+            vertical.setTitle("Vertical", for: UIControl.State())
             
             buttonDirs = [horizontal : true, vertical : false]
             
@@ -124,12 +124,12 @@ class BarsExample: UIViewController {
             
             for button in [horizontal, vertical] {
                 button.titleLabel?.font = ExamplesDefaults.fontWithSize(14)
-                button.setTitleColor(UIColor.blue, for: UIControlState())
+                button.setTitleColor(UIColor.blue, for: UIControl.State())
                 button.addTarget(self, action: #selector(DirSelector.buttonTapped(_:)), for: .touchUpInside)
             }
         }
         
-        func buttonTapped(_ sender: UIButton) {
+        @objc func buttonTapped(_ sender: UIButton) {
             let horizontal = sender == self.horizontal ? true : false
             controller?.showChart(horizontal: horizontal)
         }
@@ -155,9 +155,9 @@ class BarsExample: UIViewController {
                 "\(str)-(\(buttonsSpace))-[\(tuple.0)]"
             }
             
-            let vConstraits = namedViews.flatMap {NSLayoutConstraint.constraints(withVisualFormat: "V:|[\($0.0)]", options: NSLayoutFormatOptions(), metrics: nil, views: viewsDict)}
+            let vConstraits = namedViews.flatMap {NSLayoutConstraint.constraints(withVisualFormat: "V:|[\($0.0)]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict)}
             
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: hConstraintStr, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDict)
+            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: hConstraintStr, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict)
                 + vConstraits)
         }
         

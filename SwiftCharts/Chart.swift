@@ -91,12 +91,12 @@ public protocol ChartDelegate {
 open class Chart: Pannable, Zoomable {
 
     /// The view that the chart is drawn in
-    open let view: ChartView
+    public let view: ChartView
 
-    open let containerView: UIView
-    open let contentView: UIView
-    open let drawersContentView: UIView
-    open let containerViewUnclipped: UIView
+    public let containerView: UIView
+    public let contentView: UIView
+    public let drawersContentView: UIView
+    public let containerViewUnclipped: UIView
 
     /// The layers of the chart that are drawn in the view
     fileprivate let layers: [ChartLayer]
@@ -176,7 +176,8 @@ open class Chart: Pannable, Zoomable {
 
      - returns: The new Chart
      */
-    public init(view: ChartView, innerFrame: CGRect? = nil, settings: ChartSettings, layers: [ChartLayer]) {
+    public init(view: ChartView, innerFrame: CGRect? = nil, settings: ChartSettings, layers: [ChartLayer],
+                enableTouchOnUnclippedContainer: Bool = false) {
         
         self.layers = layers
         
@@ -193,16 +194,20 @@ open class Chart: Pannable, Zoomable {
         let contentView = ChartContentView(frame: containerView.bounds)
         contentView.backgroundColor = UIColor.clear
         containerView.addSubview(contentView)
-        
-        // TODO It may be better to move this view to ChartPointsViewsLayer (together with customClipRect setting) and create it on demand.
-        containerViewUnclipped = UIView(frame: containerView.bounds)
-        view.addSubview(containerViewUnclipped)
-        let shape = CAShapeLayer()
-        shape.path = UIBezierPath(rect: settings.customClipRect ?? CGRect.zero).cgPath
-        containerViewUnclipped.layer.mask = shape
 
         containerView.clipsToBounds = settings.clipInnerFrame
         view.addSubview(containerView)
+
+        // TODO consider moving this view to ChartPointsViewsLayer (together with customClipRect setting) and create it on demand.
+        // then `enableTouchOnUnclippedContainer` can also be removed from `Chart`
+        containerViewUnclipped = UIView(frame: containerView.bounds)
+        view.addSubview(containerViewUnclipped)
+        containerViewUnclipped.isUserInteractionEnabled = enableTouchOnUnclippedContainer
+        if let customClipRect = settings.customClipRect {
+            let shape = CAShapeLayer()
+            shape.path = UIBezierPath(rect: customClipRect).cgPath
+            containerViewUnclipped.layer.mask = shape
+        }
 
         self.contentView = contentView
         self.drawersContentView = drawersContentView
@@ -308,8 +313,14 @@ open class Chart: Pannable, Zoomable {
         contentView.frame = CGRect(x: contentView.frame.origin.x, y: contentView.frame.origin.y, width: contentView.frame.width - (yLow.deltaDefault0 + yHigh.deltaDefault0), height: contentView.frame.height - (xLow.deltaDefault0 + xHigh.deltaDefault0))
 
         // Scale contents of content view
-        let widthChangeFactor = contentView.frame.width / previousContentFrame.width
-        let heightChangeFactor = contentView.frame.height / previousContentFrame.height
+        var widthChangeFactor: CGFloat = 0
+        if previousContentFrame.width.isZero == false {
+            widthChangeFactor = contentView.frame.width / previousContentFrame.width
+        }
+        var heightChangeFactor: CGFloat = 0
+        if previousContentFrame.height.isZero == false {
+            heightChangeFactor = contentView.frame.height / previousContentFrame.height
+        }
         let frameBeforeScale = contentView.frame
         contentView.transform = CGAffineTransform(scaleX: contentView.transform.a * widthChangeFactor, y: contentView.transform.d * heightChangeFactor)
         contentView.frame = frameBeforeScale

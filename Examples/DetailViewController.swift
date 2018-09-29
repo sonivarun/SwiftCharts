@@ -96,6 +96,9 @@ class DetailViewController: UIViewController, UISplitViewControllerDelegate {
             case .cubiclines:
                 setSplitSwipeEnabled(true)
                 showExampleController(CubicLinesExample())
+            case .cubiclinesWithGradient:
+                setSplitSwipeEnabled(true)
+                showExampleController(CubicLinesWithGradientExample())
             case .notNumeric:
                 setSplitSwipeEnabled(true)
                 showExampleController(NotNumericExample())
@@ -111,10 +114,10 @@ class DetailViewController: UIViewController, UISplitViewControllerDelegate {
     
     fileprivate func showExampleController(_ controller: UIViewController) {
         if let currentExampleController = currentExampleController {
-            currentExampleController.removeFromParentViewController()
+            currentExampleController.removeFromParent()
             currentExampleController.view.removeFromSuperview()
         }
-        addChildViewController(controller)
+        addChild(controller)
         view.addSubview(controller.view)
         currentExampleController = controller
     }
